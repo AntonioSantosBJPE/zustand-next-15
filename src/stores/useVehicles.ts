@@ -1,7 +1,8 @@
 import { create } from "zustand";
 import { v4 as uuidv4 } from "uuid";
+import { mockVehicles } from "@/templates/vehicle-basic-zustand/mocks/vehicles";
 
-interface Vehicle {
+export interface Vehicle {
   id: string;
   brand: string;
   model: string;
@@ -9,15 +10,19 @@ interface Vehicle {
   price: number;
 }
 
-interface VehicleStore {
+export interface VehicleStore {
   vehicles: Vehicle[];
+  editingVehicle: Vehicle | null;
+  setEditingVehicle: (vehicle: Vehicle | null) => void;
   addVehicle: (vehicle: Omit<Vehicle, "id">) => void;
   updateVehicle: (id: string, vehicle: Partial<Vehicle>) => void;
   deleteVehicle: (id: string) => void;
 }
 
 export const useVehiclesStore = create<VehicleStore>((set) => ({
-  vehicles: [],
+  vehicles: mockVehicles,
+  editingVehicle: null,
+  setEditingVehicle: (vehicle) => set({ editingVehicle: vehicle }),
   addVehicle: (vehicle) =>
     set((state) => ({
       vehicles: [...state.vehicles, { ...vehicle, id: uuidv4() }],
