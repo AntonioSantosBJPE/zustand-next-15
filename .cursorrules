@@ -1,0 +1,164 @@
+# Cursor AI Guidelines for Vehicle Management System
+
+## Project Overview
+
+This project demonstrates two different approaches to state management using Zustand. The AI should understand and maintain these patterns when suggesting code changes.
+
+## State Management Patterns
+
+### 1. Basic Zustand (Global State)
+
+When working with global state management:
+
+- Keep state definitions in `src/stores/useVehicles.ts`
+- Use direct store access through `useVehiclesStore` hook
+- Maintain single source of truth principle
+- Follow the pattern:
+
+```typescript
+export const useVehiclesStore = create<Store>((set) => ({
+  state: initialState,
+  actions: (params) =>
+    set((state) => ({
+      /* updates */
+    })),
+}));
+```
+
+### 2. Context + Zustand (Local State)
+
+When working with context-based state management:
+
+- Keep store factory in `src/templates/vehicle-context-zustand/store/`
+- Maintain context provider in `src/templates/vehicle-context-zustand/context/`
+- Use the pattern:
+
+```typescript
+export const createStore = (initialState) =>
+  createStore<Store>((set) => ({
+    state: initialState,
+    actions: (params) =>
+      set((state) => ({
+        /* updates */
+      })),
+  }));
+```
+
+## Code Organization Rules
+
+### Component Structure
+
+- Place components in appropriate directories:
+  - Global components in `src/components/`
+  - Feature-specific components in `src/templates/{feature}/components/`
+- Follow component naming convention:
+  - Use PascalCase for component names
+  - Use `.tsx` extension for components
+
+### State Management Rules
+
+1. Global State:
+
+   - Use for truly global state (auth, theme, etc.)
+   - Direct store access
+   - Single instance
+
+2. Context State:
+   - Use for feature-specific state
+   - Access through context provider
+   - Multiple instances possible
+
+### Form Handling
+
+- Use React Hook Form with Zod validation
+- Keep schemas in separate files
+- Follow the pattern:
+
+```typescript
+const form = useForm<Schema>({
+  resolver: zodResolver(schema),
+  defaultValues: {
+    /* ... */
+  },
+});
+```
+
+## Type Safety Guidelines
+
+- Always use TypeScript interfaces/types
+- Export types when needed by multiple components
+- Use strict type checking
+- Avoid `any` type
+
+## File Organization
+
+```
+src/
+├── app/                           # Next.js pages
+├── components/                    # Shared components
+├── stores/                        # Global stores
+└── templates/                     # Feature templates
+    └── {feature}/
+        ├── components/           # Feature components
+        ├── context/             # Feature context
+        ├── store/              # Feature store
+        └── schema.ts          # Feature schemas
+```
+
+## Best Practices
+
+### State Updates
+
+- Use immutable state updates
+- Implement proper error handling
+- Include loading states when necessary
+
+### Component Design
+
+- Keep components focused and single-responsibility
+- Use composition over inheritance
+- Implement proper prop typing
+
+### Context Usage
+
+- Wrap providers at appropriate level
+- Avoid unnecessary provider nesting
+- Use proper error boundaries
+
+## Error Handling
+
+The AI should suggest proper error handling:
+
+```typescript
+if (!store) {
+  throw new Error("Store Provider is missing");
+}
+```
+
+## Performance Considerations
+
+- Suggest state selectors for optimal re-renders
+- Use proper memoization when needed
+- Avoid prop drilling
+
+## Documentation
+
+- Include JSDoc comments for complex functions
+- Document non-obvious state management decisions
+- Keep inline comments clear and necessary
+
+## Testing Considerations
+
+When suggesting code changes, consider:
+
+- Testability of components
+- Isolation of state logic
+- Proper mocking capabilities
+
+## Accessibility
+
+- Maintain proper ARIA attributes
+- Ensure keyboard navigation
+- Consider color contrast
+
+These guidelines should be followed when suggesting code changes or new implementations within the project.
